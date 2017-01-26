@@ -353,6 +353,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("foldIndexed(initial: R, operation: (index: Int, acc: R, T) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "foldIndexed(initial: R, operation: (index: Int, acc: R, element: T) -> R)" }
 
         include(CharSequences)
         doc { f ->
@@ -377,6 +378,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("foldRightIndexed(initial: R, operation: (index: Int, T, acc: R) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "foldRightIndexed(initial: R, operation: (index: Int, element: T, acc: R) -> R" }
 
         only(CharSequences, Lists, ArraysOfObjects, ArraysOfPrimitives)
         doc { f ->
@@ -417,6 +419,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("fold(initial: R, operation: (acc: R, T) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "fold(initial: R, operation: (acc: R, element: T) -> R)" }
 
         include(CharSequences)
         doc { f -> "Accumulates value starting with [initial] value and applying [operation] from left to right to current accumulator value and each ${f.element}." }
@@ -433,6 +436,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("foldRight(initial: R, operation: (T, acc: R) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "foldRight(initial: R, operation: (element: T, acc: R) -> R)" }
 
         only(CharSequences, Lists, ArraysOfObjects, ArraysOfPrimitives)
         doc { f -> "Accumulates value starting with [initial] value and applying [operation] from right to left to each ${f.element} and current accumulator value." }
@@ -465,6 +469,7 @@ fun aggregates(): List<GenericFunction> {
     templates add f("reduceIndexed(operation: (index: Int, acc: T, T) -> T)") {
         inline(true)
         only(ArraysOfPrimitives, CharSequences)
+        customSignature(ArraysOfPrimitives) { "reduceIndexed(operation: (index: Int, acc: T, element: T) -> T)" }
 
         doc { f ->
             """
@@ -533,6 +538,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("reduceRightIndexed(operation: (index: Int, T, acc: T) -> T)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "reduceRightIndexed(operation: (index: Int, element: T, acc: T) -> T)" }
 
         only(CharSequences, ArraysOfPrimitives)
         doc { f ->
@@ -609,6 +615,7 @@ fun aggregates(): List<GenericFunction> {
     templates add f("reduce(operation: (acc: T, T) -> T)") {
         inline(true)
         only(ArraysOfPrimitives, CharSequences)
+        customSignature(ArraysOfPrimitives) { "reduce(operation: (acc: T, element: T) -> T)" }
 
         doc { f -> "Accumulates value starting with the first ${f.element} and applying [operation] from left to right to current accumulator value and each ${f.element}." }
         returns("T")
@@ -662,6 +669,7 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("reduceRight(operation: (T, acc: T) -> T)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "reduceRight(operation: (element: T, acc: T) -> T)" }
 
         only(CharSequences, ArraysOfPrimitives)
         doc { f -> "Accumulates value starting with last ${f.element} and applying [operation] from right to left to each ${f.element} and current accumulator value." }
@@ -775,6 +783,8 @@ fun aggregates(): List<GenericFunction> {
 
     templates add f("forEachIndexed(action: (index: Int, T) -> Unit)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "forEachIndexed(action: (index: Int, element: T) -> Unit)" }
+
         include(CharSequences)
         doc { f ->
             """

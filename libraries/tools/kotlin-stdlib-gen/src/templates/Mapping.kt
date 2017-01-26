@@ -25,6 +25,7 @@ fun mapping(): List<GenericFunction> {
 
     templates add f("mapIndexed(transform: (index: Int, T) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "mapIndexed(transform: (index: Int, element: T) -> R)" }
 
         doc { f ->
             """
@@ -157,6 +158,7 @@ fun mapping(): List<GenericFunction> {
 
     templates add f("mapIndexedTo(destination: C, transform: (index: Int, T) -> R)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "mapIndexedTo(destination: C, transform: (index: Int, element: T) -> R)" }
 
         doc { f ->
             """

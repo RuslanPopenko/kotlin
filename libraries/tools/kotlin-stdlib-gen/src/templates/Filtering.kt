@@ -470,6 +470,7 @@ fun filtering(): List<GenericFunction> {
 
     templates add f("filterIndexed(predicate: (index: Int, T) -> Boolean)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "filterIndexed(predicate: (index: Int, element: T) -> Boolean)" }
 
         doc { f ->
             """
@@ -508,6 +509,7 @@ fun filtering(): List<GenericFunction> {
 
     templates add f("filterIndexedTo(destination: C, predicate: (index: Int, T) -> Boolean)") {
         inline(true)
+        customSignature(ArraysOfPrimitives) { "filterIndexedTo(destination: C, predicate: (index: Int, element: T) -> Boolean)" }
 
         include(CharSequences)
 
