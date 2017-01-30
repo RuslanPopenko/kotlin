@@ -99,6 +99,9 @@ class DoubleColonExpressionResolver(
                 checkClassLiteral(c, expression, result)
                 val variance = if (result is DoubleColonLHS.Expression && !result.isObject) Variance.OUT_VARIANCE else Variance.INVARIANT
                 val kClassType = reflectionTypes.getKClassType(Annotations.EMPTY, type, variance)
+                if (kClassType.isError) {
+                    c.trace.report(MISSING_DEPENDENCY_CLASS.on(expression.receiverExpression!!, KotlinBuiltIns.FQ_NAMES.kClass.toSafe()))
+                }
                 val dataFlowInfo = (result as? DoubleColonLHS.Expression)?.dataFlowInfo ?: c.dataFlowInfo
                 return dataFlowAnalyzer.checkType(createTypeInfo(kClassType, dataFlowInfo), expression, c)
             }
@@ -509,6 +512,9 @@ class DoubleColonExpressionResolver(
         checkReferenceIsToAllowedMember(descriptor, context.trace, expression)
 
         val type = createKCallableTypeForReference(descriptor, lhs, reflectionTypes, context.scope.ownerDescriptor) ?: return null
+        if (type.isError) {
+            context.trace.report(MISSING_DEPENDENCY_CLASS.on(expression, KotlinBuiltIns.FQ_NAMES.kCallable.toSafe()))
+        }
 
         when (descriptor) {
             is FunctionDescriptor -> bindFunctionReference(expression, type, context)
@@ -551,10 +557,11 @@ class DoubleColonExpressionResolver(
                 /* isCoroutine = */ false
         )
 
+        val arguments = type.arguments
         functionDescriptor.initialize(
                 null, null, emptyList(),
-                createValueParametersForInvokeInFunctionType(functionDescriptor, type.arguments.dropLast(1)),
-                type.arguments.last().type,
+                createValueParametersForInvokeInFunctionType(functionDescriptor, arguments.dropLast(1.coerceAtMost(arguments.size))),
+                arguments.lastOrNull()?.type,
                 Modality.FINAL,
                 Visibilities.PUBLIC
         )
